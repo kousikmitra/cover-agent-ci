@@ -4,7 +4,8 @@ const simpleGit = require('simple-git');
 
 async function run() {
   try {
-    const directory = core.getInput('directory');
+    const directory = core.getInput('sourceDir');
+    console.log(directory)
     const context = github.context;
     const { owner, repo } = context.repo;
 
@@ -17,6 +18,7 @@ async function run() {
     const token = core.getInput('githubToken');
     const octokit = github.getOctokit(token);
 
+
     // Fetch the PR details
     const { data: pr } = await octokit.rest.pulls.get({
       owner,
@@ -27,7 +29,7 @@ async function run() {
     const baseSha = pr.base.sha;
     const headSha = pr.head.sha;
 
-    const git = simpleGit();
+    const git = simpleGit({ baseDir: directory });
 
     // Fetch the changes between the base and head of the PR
     const diffSummary = await git.diffSummary([`${baseSha}..${headSha}`]);

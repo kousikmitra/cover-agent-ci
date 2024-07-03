@@ -13,6 +13,7 @@ jobs:
         # Put your action repo here
         uses: kousikmitra/cover-agent-ci@main
         with:
+          sourceDir: ${{ github.workspace }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check outputs
