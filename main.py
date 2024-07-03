@@ -1,21 +1,23 @@
 import os
-import requests  # noqa We are just importing this to prove the dependency installed correctly
+
+from git import Repo
 
 
-# Set the output value by writing to the outputs in the Environment File, mimicking the behavior defined here:
-#  https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter
+def main():
+    source_dir = os.curdir
+    if "INPUT_SOURCEDIR" in os.environ:
+        source_dir = os.environ["INPUT_SOURCEDIR"]
+    # print(f"Executing in {source_dir} directory")
+
+    # get changed files
+    repo = Repo(source_dir)
+    print(repo.head.commit.diff("main"))
+
+
 def set_github_action_output(output_name, output_value):
     f = open(os.path.abspath(os.environ["GITHUB_OUTPUT"]), "a")
     f.write(f"{output_name}={output_value}")
     f.close()
-
-
-def main():
-    my_input = os.environ["INPUT_MYINPUT"]
-
-    my_output = f"Hello {my_input}"
-
-    set_github_action_output("myOutput", my_output)
 
 
 if __name__ == "__main__":

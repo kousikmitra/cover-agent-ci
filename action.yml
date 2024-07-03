@@ -2,12 +2,17 @@ name: "Cover Agent CI pipeline"
 description: "test"
 author: "Kousik Mitra"
 inputs:
-  myInput:
-    description: "Input to use"
-    default: "world"
+  sourceDir:
+    description: "Source code dir"
+    required: true
+  desiredCoverage:
+    description: "Desired coverage"
+    default: "70"
 outputs:
-  myOutput:
-    description: "Output from the action"
+  previousCoverage:
+    description: "Previous coverage"
+  currentCoverage:
+    description: "Current coverage"
 runs:
   using: "docker"
   image: "Dockerfile"
