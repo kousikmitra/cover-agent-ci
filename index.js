@@ -81,7 +81,7 @@ async function runTestGen(opts) {
     cmdOpts.push("--test-file-path")
     cmdOpts.push(detail.relatedTestFile)
     cmdOpts.push("--test-command")
-    cmdOpts.push(`go test "${detail.relatedTestFile}" -coverprofile=/tmp/coverage.out && gocov convert /tmp/coverage.out | gocov-xml > /tmp/coverage.xml`)
+    cmdOpts.push(`go test -coverprofile=/tmp/coverage.out && gocov convert /tmp/coverage.out | gocov-xml > /tmp/coverage.xml`)
     cmdOpts.push("--code-coverage-report-path")
     cmdOpts.push("/tmp/coverage.xml")
     cmdOpts.push("--test-command-dir")
@@ -128,7 +128,7 @@ runTestGen({
   modelName: "azure/DevProdEnhancers",
   apiEndpoint: "https://devprodenhancers.openai.azure.com/",
   baseSha: "f79ee5726d944f6a6c5007bad24262abc4aa3b83",
-  headSha: "cd63fe93cc204286a645dc6e9ce580792c3a29bf"
+  headSha: "f7ae577aeb02bc44565e891b62a68d93d5da18ea"
 })
 
 // run();
