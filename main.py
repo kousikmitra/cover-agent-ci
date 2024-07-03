@@ -11,6 +11,9 @@ def main():
 
     # get changed files
     files_changed = get_changed_files(source_dir)
+    if len(files_changed) == 0:
+        print("No changes ditected, exiting...")
+        exit(0)
     print(files_changed)
 
 
