@@ -14,5 +14,5 @@ outputs:
   currentCoverage:
     description: "Current coverage"
 runs:
-  using: "docker"
-  image: "Dockerfile"
+  using: "node20"
+  main: "index.js"
