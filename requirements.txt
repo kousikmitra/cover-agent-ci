@@ -1,3 +1,0 @@
-
-cover-agent @ git+https://github.com/ankitchoudhary2209/cover-agent.git@619b02375a9cc84fdea1e2938204dbac31ababa1
-GitPython==3.1.43
