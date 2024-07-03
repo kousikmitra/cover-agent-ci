@@ -1,0 +1,13 @@
+name: "Cover Agent CI pipeline"
+description: "test"
+author: "Kousik Mitra"
+inputs:
+  myInput:
+    description: "Input to use"
+    default: "world"
+outputs:
+  myOutput:
+    description: "Output from the action"
+runs:
+  using: "docker"
+  image: "Dockerfile"
