@@ -1,6 +1,8 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const simpleGit = require('simple-git');
+const path = require('path')
+const fs = require('fs')
 
 async function run() {
   try {
@@ -29,14 +31,7 @@ async function run() {
     const baseSha = pr.base.sha;
     const headSha = pr.head.sha;
 
-    const git = simpleGit({ baseDir: directory });
-
-    // Fetch the changes between the base and head of the PR
-    const diffSummary = await git.diffSummary([`${baseSha}..${headSha}`]);
-
-    // Filter the changes to only include files in the specified directory
-    const changes = diffSummary.files.filter(file => file.file.startsWith(directory));
-
+    runCoverAgent(baseSha, headSha)
     // Output the list of changed files
     core.setOutput('changes', JSON.stringify(changes));
   } catch (error) {
@@ -44,4 +39,33 @@ async function run() {
   }
 }
 
-run();
+async function runCoverAgent(baseSha, headSha) {
+  const git = simpleGit();
+  const diffSummary = await git.diffSummary([`${baseSha}..${headSha}`]);
+
+  const changes = diffSummary.files.filter(change => {
+    ext = path.extname(change.file)
+    if (ext !== ".go") {
+      return false
+    }
+    if (change.file.endsWith("_test.go")) {
+      return false
+    }
+    return true
+  });
+
+  const sourceFiles = changes.map(change => change.file)
+
+  sourceFilesWithTest = sourceFiles.map(srcFile => {
+    parsedPath = path.parse(srcFile)
+    relatedTestFile = path.join(parsedPath.dir, `${parsedPath.name}_test.go`)
+    testFileExists = fs.existsSync(relatedTestFile)
+    return { srcFile: srcFile, relatedTestFile: relatedTestFile, testFileExists: testFileExists }
+  })
+
+  console.log(sourceFilesWithTest);
+}
+
+runCoverAgent("f79ee5726d944f6a6c5007bad24262abc4aa3b83", "52b990cf12bfb73f2d51750c2fbcda6d589fed41")
+
+// run();
