@@ -8,6 +8,9 @@ inputs:
   desiredCoverage:
     description: "Desired coverage"
     default: "70"
+  githubToken:
+    required: true
+    description: "github token"
 outputs:
   previousCoverage:
     description: "Previous coverage"

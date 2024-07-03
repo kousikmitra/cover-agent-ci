@@ -14,7 +14,7 @@ async function run() {
     }
 
     const prNumber = context.payload.pull_request.number;
-    const token = core.getInput('github-token');
+    const token = core.getInput('githubToken');
     const octokit = github.getOctokit(token);
 
     // Fetch the PR details
