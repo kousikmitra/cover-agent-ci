@@ -30,35 +30,35 @@ outputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-    - name: Install cover-agent
-      shell: sh
-      run: |
-        pip install git+https://github.com/Codium-ai/cover-agent.git
+    # - uses: actions/setup-python@v5
+    #   with:
+    #     python-version: "3.12"
+    # - name: Install cover-agent
+    #   shell: sh
+    #   run: |
+    #     pip install git+https://github.com/Codium-ai/cover-agent.git
 
-    - uses: actions/setup-go@v5
-      with:
-        go-version: ">=1.20.0"
+    # - uses: actions/setup-go@v5
+    #   with:
+    #     go-version: ">=1.20.0"
 
-    - name: Install go coverage tools
-      shell: sh
-      run: |
-        go version
-        go install github.com/axw/gocov/gocov@v1.1.0
-        go install github.com/AlekSi/gocov-xml@v1.1.0
+    # - name: Install go coverage tools
+    #   shell: sh
+    #   run: |
+    #     go version
+    #     go install github.com/axw/gocov/gocov@v1.1.0
+    #     go install github.com/AlekSi/gocov-xml@v1.1.0
 
-    - name: Run cover-agent-ci
-      id: cover-agent-ci-action
-      uses: kousikmitra/cover-agent-ci/cover-agent-action@main
-      with:
-        sourceDir: ${{ inputs.sourceDir }}
-        desiredCoverage: ${{ inputs.desiredCoverage }}
-        maxIterations: ${{ inputs.maxIterations }}
-        modelName: ${{ inputs.modelName }}
-        apiEndpoint: ${{ inputs.apiEndpoint }}
-        githubToken: ${{ inputs.githubToken }}
+    # - name: Run cover-agent-ci
+    #   id: cover-agent-ci-action
+    #   uses: kousikmitra/cover-agent-ci/cover-agent-action@main
+    #   with:
+    #     sourceDir: ${{ inputs.sourceDir }}
+    #     desiredCoverage: ${{ inputs.desiredCoverage }}
+    #     maxIterations: ${{ inputs.maxIterations }}
+    #     modelName: ${{ inputs.modelName }}
+    #     apiEndpoint: ${{ inputs.apiEndpoint }}
+    #     githubToken: ${{ inputs.githubToken }}
     - shell: sh
       run: |
         git diff
@@ -66,13 +66,16 @@ runs:
     - name: Create PR with changes
       shell: sh
       run: |
+        touch a.go
         git config --global user.email "kousikmitra12@gmail.com"
         git config --global user.name "Kousik Mitra"
-        targetBranch=$(git rev-parse --abbrev-ref HEAD)
-        testgenBranch=testgen/$targetBranch
-        git checkout -b "testgen/$testgenBranch"
+        targetBranch=${{ github.head_ref || github.ref_name }}
+        testgenBranch="testgen/$targetBranch"
+        echo "$targetBranch"
+        echo "$testgenBranch"
+        git checkout -b "$testgenBranch"
         # Only add go files for now
-        git add **/*.go && git commit -m "Add generated tests"
+        git add -A && git commit -m "Add generated tests"
         git push -u origin "$testgenBranch"
         gh pr create --base "$targetBranch" --head "$testgenBranch" --title "Generated test for $targetBranch" --fill-verbose
       env:
