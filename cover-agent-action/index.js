@@ -150,8 +150,8 @@ runTestGen({
   maxIterations: 1,
   modelName: "azure/DevProdEnhancers",
   apiEndpoint: "https://devprodenhancers.openai.azure.com/",
-  baseSha: "f79ee5726d944f6a6c5007bad24262abc4aa3b83",
-  headSha: "f7ae577aeb02bc44565e891b62a68d93d5da18ea"
+  baseSha: "01516762d7725bed80736af21fe3d1c6eb70d05a",
+  headSha: "0ed0f72119096cecfcc5510e5f1ddb581117a7be"
 })
 
 // run();
