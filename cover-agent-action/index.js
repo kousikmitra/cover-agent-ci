@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const simpleGit = require('simple-git');
 const path = require('path');
 const fs = require('fs');
-const { spawn } = require("child_process");
+const { spawn, spawnSync } = require("child_process");
 async function run() {
   try {
 
@@ -86,15 +86,15 @@ async function runTestGen(opts) {
   sourceFilesWithTest.forEach(detail => {
     cmdOpts = []
     cmdOpts.push("--source-file-path")
-    cmdOpts.push(detail.srcFile)
+    cmdOpts.push(`"${detail.srcFile}"`)
     cmdOpts.push("--test-file-path")
-    cmdOpts.push(detail.relatedTestFile)
+    cmdOpts.push(`"${detail.relatedTestFile}"`)
     cmdOpts.push("--test-command")
-    cmdOpts.push(`go test -coverprofile=/tmp/coverage.out && gocov convert /tmp/coverage.out | gocov-xml > /tmp/coverage.xml`)
+    cmdOpts.push(`"go test -coverprofile=/tmp/coverage.out && gocov convert /tmp/coverage.out | gocov-xml > /tmp/coverage.xml"`)
     cmdOpts.push("--code-coverage-report-path")
     cmdOpts.push("/tmp/coverage.xml")
     cmdOpts.push("--test-command-dir")
-    cmdOpts.push(detail.dir)
+    cmdOpts.push(`"${detail.dir}"`)
     cmdOpts.push("--coverage-type")
     cmdOpts.push("cobertura")
     cmdOpts.push("--desired-coverage")
@@ -105,15 +105,25 @@ async function runTestGen(opts) {
     cmdOpts.push(opts.modelName)
     if (cmdOpts.hasOwnProperty("apiEndpoint")) {
       cmdOpts.push("--api-base")
-      cmdOpts.push(opts.apiEndpoint)
+      cmdOpts.push(`"${opts.apiEndpoint}"`)
     }
     runCoverAgent(cmdOpts)
   });
 
 }
 
-function runCoverAgent(cmdOpts) {
-  console.log(cmdOpts)
+async function runCoverAgent(cmdOpts) {
+  // console.log(cmdOpts)
+  console.log(`cover-agent ${cmdOpts.join(" ")}`)
+  // const res = spawnSync("cover-agent", cmdOpts, {
+  //   encoding: 'utf8',
+  //   shell: true,
+  // });
+  // console.log(res.stdout)
+  // console.log(res.stderr)
+  // console.log(res.error)
+  // console.log(res.status)
+
   const cmd = spawn("cover-agent", cmdOpts);
   cmd.stdout.on("data", data => {
     process.stdout.write(data)
@@ -127,19 +137,21 @@ function runCoverAgent(cmdOpts) {
     console.log(`error: ${error.message}`);
   });
 
-  cmd.on("close", code => {
-    console.log(`cover-agent exited with code ${code}`);
-  });
+  await new Promise((resolve) => {
+    cmd.on("close", code => {
+      console.log(`cover-agent exited with code ${code}`);
+    });
+  })
 }
 
-// runTestGen({
-//   baseDir: ".",
-//   desiredCoverage: 70,
-//   maxIterations: 1,
-//   modelName: "azure/DevProdEnhancers",
-//   apiEndpoint: "https://devprodenhancers.openai.azure.com/",
-//   baseSha: "f79ee5726d944f6a6c5007bad24262abc4aa3b83",
-//   headSha: "f7ae577aeb02bc44565e891b62a68d93d5da18ea"
-// })
+runTestGen({
+  baseDir: ".",
+  desiredCoverage: 70,
+  maxIterations: 1,
+  modelName: "azure/DevProdEnhancers",
+  apiEndpoint: "https://devprodenhancers.openai.azure.com/",
+  baseSha: "f79ee5726d944f6a6c5007bad24262abc4aa3b83",
+  headSha: "f7ae577aeb02bc44565e891b62a68d93d5da18ea"
+})
 
-run();
+// run();
