@@ -59,6 +59,18 @@ runs:
         modelName: ${{ inputs.modelName }}
         apiEndpoint: ${{ inputs.apiEndpoint }}
         githubToken: ${{ inputs.githubToken }}
+    - shell: sh
+      run: |
+        git diff
+
+    - name: Create PR with changes
+      shell: sh
+      run: |
+        currBranch = $(git rev-parse --abbrev-ref HEAD)
+        testgenBranch = testgen/$currBranch
+        git checkout -b "testgen/$testgenBranch"
+        git add -A && git commit -m "Add generated tests"
+        gh pr create --base "$currbranch" --head "$testgenBranch"
 
   # using: "node20"
   # main: "index.js"

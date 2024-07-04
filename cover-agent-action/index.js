@@ -108,6 +108,7 @@ async function runTestGen(opts) {
     }
     runCoverAgent(cmdOpts)
   });
+
 }
 
 function runCoverAgent(cmdOpts) {
