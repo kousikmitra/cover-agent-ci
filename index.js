@@ -39,6 +39,7 @@ async function run() {
     const headSha = pr.head.sha;
 
     runTestGen({
+      baseDir: directory,
       desiredCoverage: desiredCoverage,
       maxIterations: maxIterations,
       modelName: modelName,
@@ -56,7 +57,7 @@ async function run() {
 async function runTestGen(opts) {
   console.log(opts)
 
-  const git = simpleGit();
+  const git = simpleGit(opts.baseDir);
   const diffSummary = await git.diffSummary([`${opts.baseSha}..${opts.headSha}`]);
 
   const changes = diffSummary.files.filter(change => {
@@ -130,6 +131,7 @@ function runCoverAgent(cmdOpts) {
 }
 
 // runTestGen({
+//   baseDir: ".",
 //   desiredCoverage: 70,
 //   maxIterations: 1,
 //   modelName: "azure/DevProdEnhancers",
