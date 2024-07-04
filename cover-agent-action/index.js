@@ -86,15 +86,15 @@ async function runTestGen(opts) {
   sourceFilesWithTest.forEach(detail => {
     cmdOpts = []
     cmdOpts.push("--source-file-path")
-    cmdOpts.push(`"${detail.srcFile}"`)
+    cmdOpts.push(detail.srcFile)
     cmdOpts.push("--test-file-path")
-    cmdOpts.push(`"${detail.relatedTestFile}"`)
+    cmdOpts.push(detail.relatedTestFile)
     cmdOpts.push("--test-command")
     cmdOpts.push(`"go test -coverprofile=/tmp/coverage.out && gocov convert /tmp/coverage.out | gocov-xml > /tmp/coverage.xml"`)
     cmdOpts.push("--code-coverage-report-path")
     cmdOpts.push("/tmp/coverage.xml")
     cmdOpts.push("--test-command-dir")
-    cmdOpts.push(`"${detail.dir}"`)
+    cmdOpts.push(detail.dir)
     cmdOpts.push("--coverage-type")
     cmdOpts.push("cobertura")
     cmdOpts.push("--desired-coverage")
@@ -105,7 +105,7 @@ async function runTestGen(opts) {
     cmdOpts.push(opts.modelName)
     if (cmdOpts.hasOwnProperty("apiEndpoint")) {
       cmdOpts.push("--api-base")
-      cmdOpts.push(`"${opts.apiEndpoint}"`)
+      cmdOpts.push(opts.apiEndpoint)
     }
     runCoverAgent(cmdOpts)
   });
