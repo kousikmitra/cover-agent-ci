@@ -82,7 +82,6 @@ runs:
       shell: sh
       run: |
         go tool cover -func=coverageAfter.out | grep total | awk '{print $3}' > coverageAfter.txt
-        ls
 
     - name: Comment coverage summary on PR
       uses: actions/github-script@v7
@@ -100,11 +99,10 @@ runs:
             body: comment
           });
 
-    - shell: sh
-      run: |
-        rm run.log test_results.html coverageBefore.* coverageAfter.*
-        git diff
-
+    # - shell: sh
+    #   run: |
+    #     rm run.log test_results.html coverageBefore.* coverageAfter.*
+    #     git diff
     - name: Create PR with changes
       id: create-pr
       uses: peter-evans/create-pull-request@v6
