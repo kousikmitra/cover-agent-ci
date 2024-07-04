@@ -73,6 +73,8 @@ runs:
         git checkout -b "testgen/$testgenBranch"
         git add -A && git commit -m "Add generated tests"
         gh pr create --base "$currbranch" --head "$testgenBranch"
+      env:
+        GH_TOKEN: ${{ inputs.githubToken }}
 
   # using: "node20"
   # main: "index.js"
