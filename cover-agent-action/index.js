@@ -83,7 +83,11 @@ async function runTestGen(opts) {
 
   console.log(sourceFilesWithTest);
 
-  sourceFilesWithTest.forEach(detail => {
+  // sourceFilesWithTest.forEach(detail => {
+  for (i = 0; i < sourceFilesWithTest.length; i++) {
+    console.log(`starting ${i}th...`)
+
+    const detail = sourceFilesWithTest[i]
     cmdOpts = []
     cmdOpts.push("--source-file-path")
     cmdOpts.push(detail.srcFile)
@@ -107,8 +111,9 @@ async function runTestGen(opts) {
       cmdOpts.push("--api-base")
       cmdOpts.push(opts.apiEndpoint)
     }
-    runCoverAgent(cmdOpts)
-  });
+    await runCoverAgent(cmdOpts)
+  }
+  // });
 
 }
 
@@ -125,33 +130,36 @@ async function runCoverAgent(cmdOpts) {
   // console.log(res.status)
 
   const cmd = spawn("cover-agent", cmdOpts);
-  cmd.stdout.on("data", data => {
-    process.stdout.write(data)
-  });
 
-  cmd.stderr.on("data", data => {
-    process.stderr.write(data)
-  });
+  return new Promise((resolve) => {
+    cmd.stdout.on("data", data => {
+      process.stdout.write(data)
+    });
 
-  cmd.on('error', (error) => {
-    console.log(`error: ${error.message}`);
-  });
+    cmd.stderr.on("data", data => {
+      process.stderr.write(data)
+    });
 
-  await new Promise((resolve) => {
+    cmd.on('error', (error) => {
+      console.log(`error: ${error.message}`);
+    });
+
+
     cmd.on("close", code => {
       console.log(`cover-agent exited with code ${code}`);
+      resolve(code)
     });
-  })
+  });
 }
 
-runTestGen({
-  baseDir: ".",
-  desiredCoverage: 70,
-  maxIterations: 1,
-  modelName: "azure/DevProdEnhancers",
-  apiEndpoint: "https://devprodenhancers.openai.azure.com/",
-  baseSha: "01516762d7725bed80736af21fe3d1c6eb70d05a",
-  headSha: "0ed0f72119096cecfcc5510e5f1ddb581117a7be"
-})
+// runTestGen({
+//   baseDir: ".",
+//   desiredCoverage: 70,
+//   maxIterations: 1,
+//   modelName: "azure/DevProdEnhancers",
+//   apiEndpoint: "https://devprodenhancers.openai.azure.com/",
+//   baseSha: "01516762d7725bed80736af21fe3d1c6eb70d05a",
+//   headSha: "94366d158791dca61b243bd3c3beacd006d42d36"
+// })
 
-// run();
+run();
