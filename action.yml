@@ -104,7 +104,7 @@ runs:
           const fs = require('fs');
           const coverageBefore = "${{ steps.coverageBefore.outputs.coverage }}".trim();
           const coverageAfter = "${{ steps.coverageAfter.outputs.coverage }}".trim();
-          const comment = `### Code Coverage Summary\n\nTotal Coverage Without Test Wizard: ${coverageBefore}\n\n\nVoila!! Total Coverage With Test Wizard: ${coverageAfter}\n\n\nFind the PR with generated test #${{steps.create-pr.outputs.pull-request-number}}`;
+          const comment = `### Test Wizard Summary\n\nTotal Coverage Without Test Wizard: ${coverageBefore}\n\n\nVoila!! Total Coverage With Test Wizard: ${coverageAfter}\n\n\nFind the PR with generated test #${{steps.create-pr.outputs.pull-request-number}}`;
           github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
