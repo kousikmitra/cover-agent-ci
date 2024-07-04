@@ -77,7 +77,7 @@ async function runTestGen(opts) {
     parsedPath = path.parse(path.resolve(srcFile))
     relatedTestFile = path.join(parsedPath.dir, `${parsedPath.name}_test.go`)
     testFileExists = fs.existsSync(relatedTestFile)
-    return { srcFile: srcFile, relatedTestFile: relatedTestFile, testFileExists: testFileExists, dir: parsedPath.dir }
+    return { srcFile: path.join(parsedPath.dir, srcFile), relatedTestFile: relatedTestFile, testFileExists: testFileExists, dir: parsedPath.dir }
   })
 
   console.log(sourceFilesWithTest);
