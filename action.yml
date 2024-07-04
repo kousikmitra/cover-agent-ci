@@ -59,7 +59,7 @@ runs:
       shell: sh
       run: |
         go test -v -coverprofile=coverageBefore.out ./...
-        echo "::set-output name=coverage::$(go tool cover -func=coverageBefore.out | grep total | awk '{print $3}')"
+        echo "coverage=$(go tool cover -func=coverageBefore.out | grep total | awk '{print $3}')" >> $GITHUB_OUTPUT
 
     - name: Run cover-agent-ci
       id: cover-agent-ci-action
@@ -77,7 +77,7 @@ runs:
       shell: sh
       run: |
         go test -v -coverprofile=coverageAfter.out ./...
-        echo "::set-output name=coverage::$(go tool cover -func=coverageAfter.out | grep total | awk '{print $3}')"
+        echo "coverage=$(go tool cover -func=coverageAfter.out | grep total | awk '{print $3}')" >> $GITHUB_OUTPUT
 
     - name: "Remove files"
       shell: sh
