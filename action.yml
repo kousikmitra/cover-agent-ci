@@ -82,7 +82,7 @@ runs:
     - name: "Remove files"
       shell: sh
       run: |
-        rm run.log test_results.html coverageBefore.* coverageAfter.*
+        rm -f run.log test_results.html coverageBefore.* coverageAfter.*
         git diff
 
     - name: Create PR with changes
