@@ -55,23 +55,34 @@ runs:
         modelName: ${{ inputs.modelName }}
         apiEndpoint: ${{ inputs.apiEndpoint }}
         githubToken: ${{ inputs.githubToken }}
+
     - shell: sh
       run: |
         git diff
+        # rm run.log test_results.html coverageBefore.out coverageAfter.out
 
     - name: Create PR with changes
-      shell: sh
-      run: |
-        git config --global user.email "kousikmitra12@gmail.com"
-        git config --global user.name "Kousik Mitra"
-        targetBranch=${{ github.head_ref || github.ref_name }}
-        testgenBranch="testgen/$targetBranch"
-        echo "$targetBranch"
-        echo "$testgenBranch"
-        git checkout -b "$testgenBranch"
-        # Only add go files for now
-        git add -A && git commit -m "Add generated tests"
-        git push -u origin "$testgenBranch"
-        gh pr create --base "$targetBranch" --head "$testgenBranch" --title "Generated test for $targetBranch" --fill-verbose
-      env:
-        GH_TOKEN: ${{ inputs.githubToken }}
+      id: create-pr
+      uses: peter-evans/create-pull-request@v6
+      with:
+        branch: "testgen/${{ github.head_ref || github.ref_name }}"
+        base: ${{ github.head_ref || github.ref_name }}
+        commit-message: Add generated tests
+        title: "Generated test for ${{ github.event.number }}"
+        token: ${{ inputs.githubToken }}
+
+      # shell: sh
+      # run: |
+      #   git config --global user.email "kousikmitra12@gmail.com"
+      #   git config --global user.name "Kousik Mitra"
+      #   targetBranch=${{ github.head_ref || github.ref_name }}
+      #   testgenBranch="testgen/$targetBranch"
+      #   echo "$targetBranch"
+      #   echo "$testgenBranch"
+      #   git checkout -b "$testgenBranch"
+      #   # Only add go files for now
+      #   git add -A && git commit -m "Add generated tests"
+      #   git push -u origin "$testgenBranch"
+      #   gh pr create --base "$targetBranch" --head "$testgenBranch" --title "Generated test for $targetBranch" --fill-verbose
+      # env:
+      #   GH_TOKEN: ${{ inputs.githubToken }}
