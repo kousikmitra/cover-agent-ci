@@ -1,0 +1,30 @@
+name: "Cover Agent Action"
+description: "test"
+author: "Kousik Mitra"
+inputs:
+  sourceDir:
+    description: "Source code dir"
+    required: true
+  desiredCoverage:
+    description: "Desired coverage"
+    default: "70"
+  maxIterations:
+    description: "Max iterations to run to acheive desired coverage"
+    default: "1"
+  modelName:
+    description: "Name of the model"
+    required: true
+  apiEndpoint:
+    description: "API Endpoint to access the model"
+    required: true
+  githubToken:
+    required: true
+    description: "github token"
+outputs:
+  previousCoverage:
+    description: "Previous coverage"
+  currentCoverage:
+    description: "Current coverage"
+runs:
+  using: "node20"
+  main: "index.js"

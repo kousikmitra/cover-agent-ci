@@ -18,13 +18,35 @@ inputs:
     description: "API Endpoint to access the model"
     required: true
   githubToken:
-    required: true
     description: "github token"
+    required: true
 outputs:
   previousCoverage:
     description: "Previous coverage"
+    value: ${{ steps.cover-agent-ci-action.outputs.previousCoverage }}
   currentCoverage:
     description: "Current coverage"
+    value: ${{ steps.cover-agent-ci-action.outputs.currentCoverage }}
 runs:
-  using: "node20"
-  main: "index.js"
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Install cover-agent
+      shell: sh
+      run: |
+        pip install git+https://github.com/Codium-ai/cover-agent.git
+    - name: Run cover-agent-ci
+      id: cover-agent-ci-action
+      uses: ./cover-agent-action
+      with:
+        sourceDir: ${{ inputs.sourceDir }}
+        desiredCoverage: ${{ inputs.desiredCoverage }}
+        maxIterations: ${{ inputs.maxIterations }}
+        modelName: ${{ inputs.modelName }}
+        apiEndpoint: ${{ inputs.apiEndpoint }}
+        githubToken: ${{ inputs.githubToken }}
+
+  # using: "node20"
+  # main: "index.js"
