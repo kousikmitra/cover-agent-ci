@@ -68,11 +68,11 @@ runs:
       run: |
         git config --global user.email "kousikmitra12@gmail.com"
         git config --global user.name "Kousik Mitra"
-        currBranch=$(git rev-parse --abbrev-ref HEAD)
-        testgenBranch=testgen/$currBranch
+        targetBranch=$(git rev-parse --abbrev-ref HEAD)
+        testgenBranch=testgen/$targetBranch
         git checkout -b "testgen/$testgenBranch"
         git add -A && git commit -m "Add generated tests"
-        gh pr create --base "$currbranch" --head "$testgenBranch"
+        gh pr create --base "$targetBranch" --head "$testgenBranch" --title "Generated test for $targetBranch" --fill-verbose
       env:
         GH_TOKEN: ${{ inputs.githubToken }}
 
