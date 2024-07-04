@@ -74,10 +74,11 @@ async function runTestGen(opts) {
   const sourceFiles = changes.map(change => change.file)
 
   sourceFilesWithTest = sourceFiles.map(srcFile => {
-    parsedPath = path.parse(path.resolve(srcFile))
+    absltSrcPath = path.resolve(srcFile)
+    parsedPath = path.parse(absltSrcPath)
     relatedTestFile = path.join(parsedPath.dir, `${parsedPath.name}_test.go`)
     testFileExists = fs.existsSync(relatedTestFile)
-    return { srcFile: path.join(parsedPath.dir, srcFile), relatedTestFile: relatedTestFile, testFileExists: testFileExists, dir: parsedPath.dir }
+    return { srcFile: absltSrcPath, relatedTestFile: relatedTestFile, testFileExists: testFileExists, dir: parsedPath.dir }
   })
 
   console.log(sourceFilesWithTest);
