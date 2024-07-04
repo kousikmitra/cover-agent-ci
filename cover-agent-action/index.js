@@ -90,7 +90,7 @@ async function runTestGen(opts) {
     cmdOpts.push("--test-file-path")
     cmdOpts.push(detail.relatedTestFile)
     cmdOpts.push("--test-command")
-    cmdOpts.push(`"go test -coverprofile=/tmp/coverage.out && gocov convert /tmp/coverage.out | gocov-xml > /tmp/coverage.xml"`)
+    cmdOpts.push(`go test -coverprofile=/tmp/coverage.out && gocov convert /tmp/coverage.out | gocov-xml > /tmp/coverage.xml`)
     cmdOpts.push("--code-coverage-report-path")
     cmdOpts.push("/tmp/coverage.xml")
     cmdOpts.push("--test-command-dir")
