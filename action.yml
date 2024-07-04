@@ -73,6 +73,7 @@ runs:
         git checkout -b "testgen/$testgenBranch"
         # Only add go files for now
         git add **/*.go && git commit -m "Add generated tests"
+        git push -u origin "$testgenBranch"
         gh pr create --base "$targetBranch" --head "$testgenBranch" --title "Generated test for $targetBranch" --fill-verbose
       env:
         GH_TOKEN: ${{ inputs.githubToken }}
