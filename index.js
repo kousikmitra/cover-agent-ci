@@ -10,10 +10,10 @@ async function run() {
     // TODO: install cover-agent cli on ga runner using code
     // TODO: need to export the azure open ai env too
     const directory = core.getInput('sourceDir');
-    // const desiredCoverage = core.getInput('desiredCoverage');
-    // const maxIterations = core.getInput('maxIterations');
-    // const modelName = core.getInput('modelName');
-    // const apiEndpoint = core.getInput('apiEndpoint');
+    const desiredCoverage = parseFloat(core.getInput('desiredCoverage'));
+    const maxIterations = parseInt(core.getInput('maxIterations'));
+    const modelName = core.getInput('modelName');
+    const apiEndpoint = core.getInput('apiEndpoint');
     console.log(directory)
     const context = github.context;
     const { owner, repo } = context.repo;
@@ -38,7 +38,14 @@ async function run() {
     const baseSha = pr.base.sha;
     const headSha = pr.head.sha;
 
-    runTestGen(baseSha, headSha)
+    runTestGen({
+      desiredCoverage: desiredCoverage,
+      maxIterations: maxIterations,
+      modelName: modelName,
+      apiEndpoint: apiEndpoint,
+      baseSha: baseSha,
+      headSha: headSha
+    })
     // Output the list of changed files
     core.setOutput('changes', JSON.stringify(changes));
   } catch (error) {
