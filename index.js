@@ -118,17 +118,17 @@ function runCoverAgent(cmdOpts) {
   });
 
   cmd.on("close", code => {
-    console.log(`child process exited with code ${code}`);
+    console.log(`cover-agent exited with code ${code}`);
   });
 }
 
-runTestGen({
-  desiredCoverage: 70,
-  maxIterations: 1,
-  modelName: "azure/DevProdEnhancers",
-  apiEndpoint: "https://devprodenhancers.openai.azure.com/",
-  baseSha: "f79ee5726d944f6a6c5007bad24262abc4aa3b83",
-  headSha: "f7ae577aeb02bc44565e891b62a68d93d5da18ea"
-})
+// runTestGen({
+//   desiredCoverage: 70,
+//   maxIterations: 1,
+//   modelName: "azure/DevProdEnhancers",
+//   apiEndpoint: "https://devprodenhancers.openai.azure.com/",
+//   baseSha: "f79ee5726d944f6a6c5007bad24262abc4aa3b83",
+//   headSha: "f7ae577aeb02bc44565e891b62a68d93d5da18ea"
+// })
 
-// run();
+run();
