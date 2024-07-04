@@ -71,7 +71,8 @@ runs:
         targetBranch=$(git rev-parse --abbrev-ref HEAD)
         testgenBranch=testgen/$targetBranch
         git checkout -b "testgen/$testgenBranch"
-        git add -A && git commit -m "Add generated tests"
+        # Only add go files for now
+        git add **/*.go && git commit -m "Add generated tests"
         gh pr create --base "$targetBranch" --head "$testgenBranch" --title "Generated test for $targetBranch" --fill-verbose
       env:
         GH_TOKEN: ${{ inputs.githubToken }}
