@@ -38,12 +38,30 @@ runs:
       run: |
         pip install git+https://github.com/Codium-ai/cover-agent.git
 
+    - name: setup go
+      uses: actions/setup-go@v2
+      with:
+        go-version: "^1.20.0"
+
     - name: Install go coverage tools
       shell: sh
       run: |
         go version
         go install github.com/axw/gocov/gocov@v1.1.0
         go install github.com/AlekSi/gocov-xml@v1.1.0
+
+    - name: installing dep
+      shell: sh
+      run: go mod tidy
+
+    - name: Running tests Before Test Gen AI
+      shell: sh
+      run: go test -v -coverprofile=coverageBefore.out ./...
+
+    - name: Extract coverage summary Before Test Gen AI
+      shell: sh
+      run: |
+        go tool cover -func=coverageBefore.out | grep total | awk '{print $3}' > coverageBefore.txt
 
     - name: Run cover-agent-ci
       id: cover-agent-ci-action
@@ -56,10 +74,35 @@ runs:
         apiEndpoint: ${{ inputs.apiEndpoint }}
         githubToken: ${{ inputs.githubToken }}
 
+    - name: Running tests After Test Gen AI
+      shell: sh
+      run: go test -v -coverprofile=coverageAfter.out ./...
+
+    - name: Extract coverage summary After Test Gen AI
+      shell: sh
+      run: |
+        go tool cover -func=coverageAfter.out | grep total | awk '{print $3}' > coverageAfter.txt
+
+    - name: Comment coverage summary on PR
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const coverageBefore = fs.readFileSync('coverageBefore.txt', 'utf8').trim();
+          const coverageAfter = fs.readFileSync('coverageAfter.txt', 'utf8').trim();
+          const comment = `### Code Coverage Summary\n\nTotal Coverage Before Test Gen AI: ${coverageBefore}\n\n\nVoila!! Total Coverage After Test Gen AI: ${coverageAfter}`;
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
     - shell: sh
       run: |
+        rm run.log test_results.html coverageBefore.* coverageAfter.*
         git diff
-        # rm run.log test_results.html coverageBefore.out coverageAfter.out
 
     - name: Create PR with changes
       id: create-pr
@@ -68,7 +111,7 @@ runs:
         branch: "testgen/${{ github.head_ref || github.ref_name }}"
         base: ${{ github.head_ref || github.ref_name }}
         commit-message: Add generated tests
-        title: "Generated test for ${{ github.event.number }}"
+        title: "Generated test for PR #${{ github.event.number }}"
         token: ${{ inputs.githubToken }}
 
       # shell: sh
