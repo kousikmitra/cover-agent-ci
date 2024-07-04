@@ -6,10 +6,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
+      - run: |
+          git status
+
       - name: Self test
         id: selftest
-
         # Put your action repo here
         uses: kousikmitra/cover-agent-ci@main
         with:
