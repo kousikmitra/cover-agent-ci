@@ -116,11 +116,11 @@ function runCoverAgent(cmdOpts) {
   console.log(cmdOpts)
   const cmd = spawn("cover-agent", cmdOpts);
   cmd.stdout.on("data", data => {
-    console.log(`stdout: ${data}`);
+    process.stdout.write(data)
   });
 
   cmd.stderr.on("data", data => {
-    console.log(`stderr: ${data}`);
+    process.stderr.write(data)
   });
 
   cmd.on('error', (error) => {
