@@ -48,7 +48,7 @@ async function run() {
       headSha: headSha
     })
     // Output the list of changed files
-    core.setOutput('changes', JSON.stringify(changes));
+    // core.setOutput('changes', JSON.stringify(changes));
   } catch (error) {
     core.setFailed(error.message);
   }
