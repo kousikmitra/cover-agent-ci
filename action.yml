@@ -51,7 +51,7 @@ runs:
 
     - name: Run cover-agent-ci
       id: cover-agent-ci-action
-      uses: ./cover-agent-action
+      uses: kousikmitra/cover-agent-ci/cover-agent-action
       with:
         sourceDir: ${{ inputs.sourceDir }}
         desiredCoverage: ${{ inputs.desiredCoverage }}
