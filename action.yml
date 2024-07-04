@@ -36,7 +36,7 @@ runs:
     - name: Install cover-agent
       shell: sh
       run: |
-        pip install git+https://github.com/Codium-ai/cover-agent.git
+        pip install git+https://github.com/ankitchoudhary2209/cover-agent.git@b1
 
     - name: setup go
       uses: actions/setup-go@v2
