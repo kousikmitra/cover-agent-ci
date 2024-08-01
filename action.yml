@@ -26,7 +26,7 @@ outputs:
     value: ${{ steps.cover-agent-ci-action.outputs.previousCoverage }}
   currentCoverage:
     description: "Current coverage"
-    value: ${{ steps.cover-agent-ci-action.outputs.currentCoverage }}
+    value: ${{ steps.cover-agent-ci-action.outputs.currentCoverageg }}
 runs:
   using: composite
   steps:
